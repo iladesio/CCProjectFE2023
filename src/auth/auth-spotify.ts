@@ -2,16 +2,17 @@ import {
     ACCESS_TOKEN_LOCAL_STORAGE,
     APP_CLIENT_ID,
     CODE_VERIFIER_LOCAL_STORAGE,
-    REDIRECT_URI
+    REDIRECT_URI,
+    REFRESH_TOKEN_LOCAL_STORAGE
 } from './auth-spotify.constants'
 import {generateCodeChallenge, generateRandomString} from './auth-spotify.utils'
 
 
 export const checkAuthCode = async () => {
 
-    const isTokenPresent = localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE)
+    const access_token = localStorage.getItem(ACCESS_TOKEN_LOCAL_STORAGE)
 
-    if (!isTokenPresent) {
+    if (!access_token) {
 
         const urlParams = new URLSearchParams(window.location.search)
         let code = urlParams.get('code')
@@ -43,11 +44,12 @@ export const checkAuthCode = async () => {
                     })
                     .then(data => {
                         localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE, data.access_token)
+                        localStorage.setItem(REFRESH_TOKEN_LOCAL_STORAGE, data.refresh_token)
                     })
                     .then(() => {
-                        let urlParams = new URLSearchParams(window.location.search);
+                        let urlParams = new URLSearchParams(window.location.search)
 
-                        urlParams.delete('code');
+                        urlParams.delete('code')
                         urlParams.delete('state');
 
                         // @ts-ignore
@@ -84,6 +86,63 @@ export const checkAuthCode = async () => {
             })
 
         }
+
+    } else {
+
+        // check if token needs to be refreshed
+
+        fetch('https://api.spotify.com/v1/me', {
+            headers: {
+                Authorization: 'Bearer ' + access_token
+            }
+        }).then(response => {
+
+                if (!response.ok) {
+                    const refresh_token = localStorage.getItem(REFRESH_TOKEN_LOCAL_STORAGE)
+
+                    if (refresh_token){
+
+                        // @ts-ignore
+                        let body = new URLSearchParams({
+                            grant_type: 'refresh_token',
+                            refresh_token: refresh_token
+                        })
+
+                        // check if token is still valid
+                        fetch('https://accounts.spotify.com/api/token', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: body
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    localStorage.clear()
+                                    window.location.reload()
+
+                                    throw new Error('HTTP status ' + response.status)
+                                }
+                                return response.json()
+                            })
+                            .then(data => {
+                                localStorage.setItem(ACCESS_TOKEN_LOCAL_STORAGE, data.access_token)
+                                localStorage.setItem(REFRESH_TOKEN_LOCAL_STORAGE, data.refresh_token)
+                            })
+                            .catch(error => {
+                                console.error('Error:', error)
+                                localStorage.clear()
+                            })
+                    } else {
+                        localStorage.clear()
+                        window.location.reload()
+                    }
+
+                }
+
+            }
+        )
+
 
     }
 

@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import './App.css'
-import {Container} from '@mui/material'
+import {Box, Card, CardContent, Container} from '@mui/material'
 import SoundflowFormContainer from './components/FormContainer'
+import logo1 from './assets/soundflow-logo.png'
 
 const App = () => {
 
@@ -45,7 +46,7 @@ const App = () => {
         window.onSpotifyIframeApiReady = (IFrameAPI) => {
             let element = document.getElementById('embed-iframe')
             let options = {
-                uri: 'spotify:track:3DG2hUPMLKcFptV1Gv32oI'
+                uri: 'spotify:track:77lp4fXKk6G1Md0aYAl4Mz'
             }
             let callback = (EmbedController: any) => {
             }
@@ -54,22 +55,33 @@ const App = () => {
     }, [token])
 
     return <div className="App">
-        <Container fixed>
-            <form action="POST">
+        <Container fixed className="pt-5">
 
-                {/*header*/}
-                <div className="row">
-                    <div className="col-12">
-                        insert image
-                    </div>
+            <div className="row pt-2">
+                <div className="col d-flex justify-content-center">
+                    <Box sx={{boxShadow: 4}}>
+                        <Card variant="outlined" sx={{maxWidth: 460, backgroundColor: '#d5e7e1'}}>
+                            <CardContent>
+                                <form action="POST">
+                                    {/*header*/}
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <img src={logo1} alt="Logo" width="256" height="80"
+                                                 style={{borderRadius: '10px'}}/>
+                                        </div>
+                                    </div>
+
+                                    {/*form container*/}
+                                    <SoundflowFormContainer/>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    </Box>
                 </div>
+            </div>
 
-                {/*form container*/}
-                <SoundflowFormContainer/>
-            </form>
-
-            <div className="row">
-                <div className="col">
+            <div className="row pt-3">
+                <div className="col-6 offset-3">
                     <div id="embed-iframe"/>
                 </div>
             </div>
