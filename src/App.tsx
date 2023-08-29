@@ -1,58 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import './App.css'
 import {Box, Card, CardContent, Container} from '@mui/material'
 import SoundflowFormContainer from './components/FormContainer'
 import logo1 from './assets/soundflow-logo.png'
+import SpotifyPlayer from 'react-spotify-web-playback'
 
 const App = () => {
 
-    const [player, setPlayer] = useState(undefined)
+    const [trackUri, setTrackUri] = useState<string | null>(null)
+
     const token = localStorage.getItem('access_token')
-
-    useEffect(() => {
-
-        const script = document.createElement('script')
-        script.src = 'https://sdk.scdn.co/spotify-player.js'
-        script.async = true
-
-        document.body.appendChild(script)
-
-        // @ts-ignore
-        window.onSpotifyWebPlaybackSDKReady = () => {
-
-            const player = new (window as any).Spotify.Player({
-                name: 'soundflow',
-                getOAuthToken: (cb: any) => {
-                    cb(token)
-                },
-                volume: 0.5
-            })
-
-            setPlayer(player)
-
-            player.addListener('ready', ({device_id}: any) => {
-                console.log('Ready with Device ID', device_id)
-            })
-
-            player.addListener('not_ready', ({device_id}: any) => {
-                console.log('Device ID has gone offline', device_id)
-            })
-
-            player.connect()
-
-        }
-
-        // @ts-ignore
-        window.onSpotifyIframeApiReady = (IFrameAPI) => {
-            let element = document.getElementById('embed-iframe')
-            let options = {
-                uri: 'spotify:track:77lp4fXKk6G1Md0aYAl4Mz'
-            }
-            let callback = (EmbedController: any) => {
-            }
-            IFrameAPI.createController(element, options, callback)
-        }
-    }, [token])
 
     return <div className="App">
         <Container fixed className="pt-5">
@@ -72,7 +29,7 @@ const App = () => {
                                     </div>
 
                                     {/*form container*/}
-                                    <SoundflowFormContainer/>
+                                    <SoundflowFormContainer setTrackUri={setTrackUri}/>
                                 </form>
                             </CardContent>
                         </Card>
@@ -80,11 +37,20 @@ const App = () => {
                 </div>
             </div>
 
-            <div className="row pt-3">
-                <div className="col-6 offset-3">
-                    <div id="embed-iframe"/>
-                </div>
-            </div>
+            {trackUri && token && <div className="row mt-1 mt-sm-3">
+                <div className="col">
+                    <SpotifyPlayer
+                        token={token}
+                        showSaveIcon
+                        play
+                        uris={trackUri ? ['spotify:track:' + trackUri] : []}
+                        styles={{
+                            bgColor: '#d5e7e1',
+                            sliderColor: '#143e4d',
+                            color: '#143e4d'
+                        }}
+                    /></div>
+            </div>}
 
         </Container>
     </div>

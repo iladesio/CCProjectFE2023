@@ -68,7 +68,14 @@ export const checkAuthCode = async () => {
 
             generateCodeChallenge(codeVerifier).then(codeChallenge => {
                 let state = generateRandomString(16)
-                let scope = 'user-read-private user-read-email streaming app-remote-control'
+                let scope = 'user-read-private ' +
+                                    'user-read-email ' +
+                                    'user-read-playback-state ' +
+                                    'user-modify-playback-state ' +
+                                    'user-library-read ' +
+                                    'user-library-modify ' +
+                                    'streaming ' +
+                                    'app-remote-control'
 
                 localStorage.setItem(CODE_VERIFIER_LOCAL_STORAGE, codeVerifier)
 

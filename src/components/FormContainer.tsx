@@ -1,10 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Box, Button, TextField} from '@mui/material'
+import {Box, Button, CircularProgress, TextField} from '@mui/material'
 import {useFetchHook} from './custom-hook/useFetchHook'
 import {BASE_PREDICTION_URL, GET_PREDICTION_END_POINT} from './constants'
 
 
-const SoundflowFormContainer = () => {
+const SoundflowFormContainer = (props: any) => {
+
+    const {setTrackUri} = props
 
     const {fetchData, response, isRequestPending} = useFetchHook({
         url: `${BASE_PREDICTION_URL}${GET_PREDICTION_END_POINT}`
@@ -18,9 +20,12 @@ const SoundflowFormContainer = () => {
 
     }, [fetchData, feelingText])
 
-   /* useEffect(() => {
-        console.log('AAA response', response)
-    }, [response])*/
+    useEffect(() => {
+        if (response?.['body']) {
+            const spotifyUri = JSON.parse(response['body'])['spotifyId']
+            spotifyUri && setTrackUri(spotifyUri)
+        }
+    }, [response, setTrackUri])
 
     return <div className="row">
         <div className="col-12 d-flex justify-content-center">
@@ -29,11 +34,7 @@ const SoundflowFormContainer = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center'
-                }}
-            >
-                {/*<Typography component="caption" >
-                    Insert text
-                </Typography>*/}
+                }}>
 
                 <Box sx={{mt: 1}}>
                     <TextField
@@ -53,11 +54,14 @@ const SoundflowFormContainer = () => {
                     <Button
                         onClick={handleSubmitText}
                         variant="contained"
+                        color="primary"
+                        disabled={isRequestPending}
                         style={{
-                            backgroundColor: 'rgb(1 131 116)'
+                            backgroundColor: isRequestPending ? 'rgb(222 225 230)' : 'rgb(1 131 116)'
                         }}
                         sx={{mt: 3, mb: 2}}>
                         Recommend me a song!
+                        {isRequestPending && <CircularProgress color="inherit" className="ml-2" size={20}/>}
                     </Button>
 
                 </Box>
