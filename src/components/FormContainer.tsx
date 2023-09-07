@@ -49,6 +49,7 @@ const SoundflowFormContainer = (props: any) => {
                         autoFocus
                         multiline
                         rows={3}
+                        helperText="Please insert a text."
                     />
 
                     <Button
