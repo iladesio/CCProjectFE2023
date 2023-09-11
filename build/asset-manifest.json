@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.99ac31ce.css",
-    "main.js": "/static/js/main.3cecdbc6.js",
+    "main.js": "/static/js/main.21c443f0.js",
     "static/js/496.97a8bdb9.chunk.js": "/static/js/496.97a8bdb9.chunk.js",
     "static/media/soundflow-logo.png": "/static/media/soundflow-logo.b88120179e1abc009306.png",
     "index.html": "/index.html",
     "main.99ac31ce.css.map": "/static/css/main.99ac31ce.css.map",
-    "main.3cecdbc6.js.map": "/static/js/main.3cecdbc6.js.map",
+    "main.21c443f0.js.map": "/static/js/main.21c443f0.js.map",
     "496.97a8bdb9.chunk.js.map": "/static/js/496.97a8bdb9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.99ac31ce.css",
-    "static/js/main.3cecdbc6.js"
+    "static/js/main.21c443f0.js"
   ]
 }
