@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {Box, Button, CircularProgress, TextField} from '@mui/material'
+import {Box, Button, CircularProgress, TextField, Tooltip} from '@mui/material'
 import {useFetchHook} from './custom-hook/useFetchHook'
 import {BASE_PREDICTION_URL, GET_PREDICTION_END_POINT} from './constants'
 
@@ -49,22 +49,25 @@ const SoundflowFormContainer = (props: any) => {
                         autoFocus
                         multiline
                         rows={3}
-                        helperText="Please insert a text."
+                        helperText={feelingText ? '' : 'Please insert a text'}
                     />
 
+                    <Tooltip title={feelingText ? '' : 'Please insert a text'} placement="top">
+                        <span>
                     <Button
                         onClick={handleSubmitText}
                         variant="contained"
                         color="primary"
-                        disabled={isRequestPending}
+                        disabled={isRequestPending || !feelingText}
                         style={{
-                            backgroundColor: isRequestPending ? 'rgb(222 225 230)' : 'rgb(1 131 116)'
+                            backgroundColor: isRequestPending || !feelingText ? 'rgb(222 225 230)' : 'rgb(1 131 116)'
                         }}
                         sx={{mt: 3, mb: 2}}>
                         Recommend me a song!
                         {isRequestPending && <CircularProgress color="inherit" className="ml-2" size={20}/>}
                     </Button>
-
+                            </span>
+                    </Tooltip>
                 </Box>
             </Box>
         </div>
