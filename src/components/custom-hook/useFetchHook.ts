@@ -11,11 +11,11 @@ export const useFetchHook = (props: IFetchHookProps) => {
     const [response, setResponse] = useState(null)
     const [isRequestPending, setRequestPending] = useState(false)
 
-    const fetchData = useCallback(async (body: any) => {
+    const fetchData = useCallback(async (method: string, body?: any) => {
         try {
             setRequestPending(true)
             const response = await fetch(url, {
-                method: 'POST',
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },

@@ -16,6 +16,7 @@ import SoundflowFormContainer from './components/FormContainer'
 import logo1 from './assets/soundflow-logo.png'
 import SpotifyPlayer from 'react-spotify-web-playback'
 import {getProfile} from './auth/auth-spotify.utils'
+import HistoryTable from './components/HistoryTable'
 
 const App = () => {
 
@@ -97,6 +98,16 @@ const App = () => {
                             }}
                         /></div>
                 </div>}
+
+                <div className="row pt-4">
+                    <div className="col d-flex justify-content-center">
+                        <Box sx={{boxShadow: 4}}>
+
+                            <HistoryTable/>
+                        </Box>
+                    </div>
+                </div>
+
 
             </Container>
         </> : <div className="d-flex justify-content-center"><CircularProgress size={30} className="mt-4"/></div>}

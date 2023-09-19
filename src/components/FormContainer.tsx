@@ -16,7 +16,7 @@ const SoundflowFormContainer = (props: any) => {
     const [feelingText, setFeelingText] = useState('')
 
     const handleSubmitText = useCallback(() => {
-        fetchData({text: feelingText})
+        fetchData('POST', {text: feelingText})
 
     }, [fetchData, feelingText])
 
